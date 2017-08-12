@@ -1,0 +1,19 @@
+{
+  "name": "tessel-drink",
+  "version": "0.0.0",
+  "description": "Tessel project",
+  "main": "index.js",
+  "dependencies": {
+    "tiny-router": "git+https://github.com/amora-labs/tiny-router.git"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "www.github.com/tessel/t2-cli",
+  "keywords": [
+    "Tessel"
+  ],
+  "license": "MIT",
+  "readme": "A bare bones Tessel 2 blinky script."
+}
