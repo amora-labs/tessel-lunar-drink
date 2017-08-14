@@ -6,3 +6,4 @@
 # For more information, visit: https://tessel.io/docs/cli#usage
 
 public/
+./drink.js
