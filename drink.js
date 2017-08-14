@@ -27,31 +27,35 @@ var drink = {
             return p + c;
         },0);
     },
-    turnPumpOn(number) {
+    turnPumpOn: function(number) {
         console.log("Ligando bomba #"+number);
         tessel.port.B.pin[number].write(0, function(error, buffer) {
-            if (error !== undefined) {
+            if (error !== null) {
+                console.log(error)
+                console.log(JSON.stringify(error))
                 return error;
             }
 
-            return true;
         });
+        return true;
+        
     },
-    turnPumpOff(number) {
+    turnPumpOff: function(number) {
         console.log("Desligando bomba #"+number);        
         tessel.port.B.pin[number].write(1, function(error, buffer) {
-            if (error !== undefined) {
+            if (error !== null) {
                 return error;
             }
 
-            return true;
         });
+        return true;
+        // todo: needs CB style or promisses.
     },
-    turnPumpOnForSeconds(number, seconds) {
+    turnPumpOnForSeconds: function(number, seconds) {
         console.log("Ligando bomba #"+number + " por " + seconds + " segundos");        
         var status = drink.turnPumpOn(number);
         
-        if (!status) {
+        if (status !== true) {
             console.log("--- Problema com a bomba #" + number + ": " + status + " ---");
             return status
         }
@@ -88,6 +92,11 @@ var drink = {
             status: "ok",
             msg: "Fazendo " + recipe
         }
+    },
+    init: function() {
+        [0, 1, 2, 3].forEach(function(i) {
+            tessel.port.B.pin[i].write(1);
+        })
     }
 }
 
