@@ -5,7 +5,8 @@ var drink = {
     recipes: {
         maitai: [60, 0, 120, 0],
         cubalibre: [70, 120, 0, 0],
-        hifi: [0, 0, 120, 70],
+        //hifi: [0, 0, 120, 70],
+        hifi: [25, 25, 120, 25],
         moskvasvobodno: [0, 120, 0, 70],
         teste: [5, 0, 0, 0]
     },
@@ -19,17 +20,18 @@ var drink = {
         drink.busy = true;
         setTimeout(function() {
             console.log("--- pronta para outro drink! ---");
+            drink.init();
             drink.busy = false;
         },time * 1000);
     },
     timeForRecipe: function(recipe) {
         return drink.recipes[recipe].reduce(function(p, c) {
-            return p + c;
+            return Math.max(p, c);
         },0);
     },
     turnPumpOn: function(number) {
         console.log("Ligando bomba #"+number);
-        tessel.port.B.pin[number].write(0, function(error, buffer) {
+        tessel.port.A.pin[number].write(0, function(error, buffer) {
             if (error !== null) {
                 console.log(error)
                 console.log(JSON.stringify(error))
@@ -42,7 +44,7 @@ var drink = {
     },
     turnPumpOff: function(number) {
         console.log("Desligando bomba #"+number);        
-        tessel.port.B.pin[number].write(1, function(error, buffer) {
+        tessel.port.A.pin[number].write(1, function(error, buffer) {
             if (error !== null) {
                 return error;
             }
@@ -95,7 +97,7 @@ var drink = {
     },
     init: function() {
         [0, 1, 2, 3].forEach(function(i) {
-            tessel.port.B.pin[i].write(1);
+            tessel.port.A.pin[i].write(1);
         })
     }
 }

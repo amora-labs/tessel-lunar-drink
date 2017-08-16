@@ -46,6 +46,5 @@ for (var k in interfaces) {
 }
 
 drink.init();
-drink.mix("hifi")
 
 console.log("Lunar Drink (tessel version) is ready on http://"+addresses[0]+":8080/");
