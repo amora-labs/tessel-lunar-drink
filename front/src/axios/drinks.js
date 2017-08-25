@@ -3,14 +3,7 @@
 import { requester as http } from './http'
 
 const makeDrink = drink => {
-    return new Promise((resolve, reject) => {
-        http.get(`main/make/drink/${drink}`, {})
-        .then(response => response.data)
-        .then(data => resolve(data))
-    })
-    .catch(e => {
-        console.error(e)
-    })
+    return http.get(`make/drink/${drink}`, {})
 }
 
 export {

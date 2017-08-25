@@ -9,6 +9,10 @@
         color: darken($color3, 20%)
         +dont-select
 
+        > .name.failed
+            color: #FFFFFF
+            +transition(.5s)
+
         > .drinks
             +flex(row, w, center, center)
             height: $pixel-proportion * 75
@@ -64,6 +68,7 @@
                 line-height: 30px
 
             > .big
+                +transition(.5s)
                 z-index: 5
                 height: $pixel-proportion * 32
                 width: $pixel-proportion * 32
@@ -77,6 +82,8 @@
                     position: absolute
                     top: $pixel-proportion * -4
                     left: $pixel-proportion * -4
+                    background-color: $transparent
+                    +transition(.5s)
 
                 &::after
                     height: $pixel-proportion * 4
@@ -88,6 +95,9 @@
                     top: $pixel-proportion * -6
                     left: $pixel-proportion * 14
                     box-shadow: 0 0 0 2px $white
+
+            > .failed
+                background-color: darken($color3, 20%)
 
             > .big.slow
                 +animation(spin, 20024ms, linear, 0, infinite, normal, running)
@@ -162,8 +172,9 @@
             position: absolute
             z-index: 9
             text-align: center
-            font-size: 60px
-            line-height: 50px
+            font-size: 55px
+            line-height: 45px
+            width: 230px
             transform: scale(.8)
 
         .drinks
@@ -198,8 +209,9 @@
             position: absolute
             z-index: 9
             text-align: center
-            font-size: 60px
-            line-height: 50px
+            font-size: 55px
+            width: 230px
+            line-height: 45px
 
         .top
             top: $pixel-proportion * -3
@@ -231,6 +243,18 @@
             background-color: $color5
         100%
             background-color: $color2
+
+    @keyframes pulse
+        0%
+            background-color: $color2
+        25%
+            background-color: $color1
+        50%
+            background-color: $color4
+        75%
+            background-color: $color5
+        100%
+            background-color: $color2
 </style>
 
 <template lang="pug">
@@ -238,10 +262,7 @@
         .amora
             img(src="static/img/logo.svg")
 
-        .name
-            | lunar
-            br
-            | drink
+        .name(:class="{ 'failed' : name != 'lunar drink' }") {{name}}
 
         .drinks
             .drink.top.color2.large(
@@ -263,7 +284,7 @@
                     .time(v-if="active == 'hifi'") {{time}}
                 i.fa.fa-cog.fa-spin.fa-3x.fa-fw(v-if="active == 'hifi'")
 
-            .big(:class="{ 'fast' : active != '', 'slow' : active == '' }")
+            .big(:class="{ 'fast' : active != '', 'slow' : active == '', 'failed' : name != 'lunar drink' }")
 
             .drink.right.color1(
                 :class="{ 'disabled' : active != 'cubalibre' && active != '' }",
@@ -294,7 +315,8 @@
         data: () => ({
             active: '',
             time: '',
-            timer: ''
+            timer: '',
+            name: 'lunar drink'
         }),
         created: function () {},
         mounted: function () {},
@@ -308,18 +330,39 @@
         methods: {
             ...mapMutations([]),
             myDrink (drink) {
-                // this.active = drink
-                // this.calcTime(5)
-                if (drink && this.active === '') {
-                    console.log('making drink', drink)
-                    this.active = drink
+                if (drink && this.active === '' && this.name === 'lunar drink') {
+                    console.log(`trying make a drink > ${drink}`)
                     makeDrink(drink)
+                    .then(response => response.data)
                     .then(data => {
-                        this.calcTime(data.time)
+                        if (data.status === 'ok') {
+                            if (data.time) {
+                                this.active = drink
+                                this.calcTime(data.time)
+                            }
+                        } else if (data.status === 'erro') {
+                            this.name = 'máquina ocupada'
+                            setTimeout(() => {
+                                this.name = 'lunar drink'
+                            }, 3000)
+                        }
+                    })
+                    .catch(e => {
+                        if (e.response) {
+                            console.log(e.response.status)
+                            this.name = `erro ${e.response.status}`
+                            setTimeout(() => {
+                                this.name = 'lunar drink'
+                            }, 3000)
+                        } else {
+                            console.log(e)
+                            this.name = `erro crítico`
+                            setTimeout(() => {
+                                this.name = 'lunar drink'
+                            }, 3000)
+                        }
                     })
                 }
-                //
-                // }
             },
             calcTime (time) {
                 this.time = ''
