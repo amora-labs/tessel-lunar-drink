@@ -3,6 +3,7 @@ var tessel = require('tessel');
 var drink = {
     busy: false,
     recipes: {
+        // todo: atualizar para ficar igual aos slides...
         maitai: [60, 0, 120, 0],
         cubalibre: [70, 120, 0, 0],
         hifi: [0, 0, 120, 70],
@@ -43,7 +44,6 @@ var drink = {
 
         });
         return true;
-        // todo: needs CB style or promisses.
     },
     turnPumpOnForSeconds: function(number, seconds) {
         console.log("Ligando bomba #"+number + " por " + seconds + " segundos");        
