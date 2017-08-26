@@ -1,6 +1,5 @@
 'use strict';
 
-// Import the interface to Tessel hardware
 var tessel = require('tessel');
 var router = require('tiny-router');
 var drink = require('./drink.js');
@@ -47,4 +46,4 @@ for (var k in interfaces) {
 
 drink.init();
 
-console.log("Lunar Drink (tessel version) is ready on http://"+addresses[0]+":8080/");
+console.log("Lunar Drink (tessel version) de boa esperando o seu pedido em http://"+addresses[0]+":8080/");
